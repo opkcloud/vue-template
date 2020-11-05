@@ -1,6 +1,6 @@
 # vue-admin-template
 
-English | [简体中文](./README-zh.md)
+English | [简体中文](./README-zh.md) | 该模板对应后端：https://github.com/opkcloud/SpringBoot
 
 > A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
 
