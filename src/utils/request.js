@@ -2,6 +2,14 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import settings from '../settings'
+import JSEncrypt from 'encryptlong'
+
+// 设置 RSA 加密
+const dataEncrypt = new JSEncrypt()
+const dataDecrypt = new JSEncrypt()
+dataEncrypt.setPublicKey(settings.publicKey)
+dataDecrypt.setPrivateKey(settings.privateKey)
 
 // create an axios instance
 const service = axios.create({
@@ -21,6 +29,22 @@ service.interceptors.request.use(
       // please modify it according to the actual situation
       config.headers['X-Token'] = getToken()
     }
+
+    // request 参数加密
+    if (true) {
+
+      // encrypt request params
+      if (config.params) {
+        config.params = { params: encrypt(JSON.stringify(config.params)) }
+      }
+
+      // encrypt request body
+      if (config.data) {
+        config.headers['Content-Type'] = 'application/json'
+        config.data = encrypt(JSON.stringify(config.data))
+      }
+    }
+
     return config
   },
   error => {
@@ -44,6 +68,11 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
+
+    if (settings.enableDataEncrypt) {
+      res.data = JSON.parse(decrypt(res.data))
+    }
+    console.log('res.data: ', res.data)
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
@@ -81,5 +110,13 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+function encrypt(str) {
+  return dataEncrypt.encryptLong(encodeURIComponent(str))
+}
+
+function decrypt(str) {
+  return decodeURIComponent(dataDecrypt.decryptLong(str))
+}
 
 export default service
