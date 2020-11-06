@@ -31,7 +31,7 @@ service.interceptors.request.use(
     }
 
     // request 参数加密
-    if (true) {
+    if (false) {
 
       // encrypt request params
       if (config.params) {
@@ -69,7 +69,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    if (settings.enableDataEncrypt) {
+    if (false) {
       res.data = JSON.parse(decrypt(res.data))
     }
     console.log('res.data: ', res.data)
