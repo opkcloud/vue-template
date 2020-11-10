@@ -37,7 +37,7 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '/web': {
+      '/template': {
         target: 'http://localhost:9000',
         secure: false, // 处理 https 请求
         changeOrigin: true // 允许跨域

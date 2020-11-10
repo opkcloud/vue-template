@@ -13,7 +13,8 @@ dataDecrypt.setPrivateKey(settings.privateKey)
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // 问题 1
+  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -31,8 +32,7 @@ service.interceptors.request.use(
     }
 
     // request 参数加密
-    if (false) {
-
+    if (settings.enableDataEncrypt) {
       // encrypt request params
       if (config.params) {
         config.params = { params: encrypt(JSON.stringify(config.params)) }
@@ -69,13 +69,13 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    if (false) {
+    if (settings.enableDataEncrypt) {
       res.data = JSON.parse(decrypt(res.data))
     }
     console.log('res.data: ', res.data)
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== '20000') {
       Message({
         message: res.message || 'Error',
         type: 'error',
